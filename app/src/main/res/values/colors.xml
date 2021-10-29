@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text">#303030</color>
+    <color name="text_faint">#55303030</color>
+    <color name="accent">#03A9F4</color>
+</resources>
