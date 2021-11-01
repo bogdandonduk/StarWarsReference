@@ -1,4 +1,4 @@
-package proto.android.starwarsreference.core.base
+package proto.android.starwarsreference.core
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import bogdandonduk.viewdatabindingwrapperslib.ViewBindingHandler
+import proto.android.starwarsreference.core.item.Item
 
 abstract class BaseRecyclerViewAdapter<
-        ItemType : BaseItem,
+        ItemType : Item,
         ViewHolderType : BaseRecyclerViewAdapter.BaseViewHolder<ItemType, out ViewBinding>,
         HelperType : BaseRecyclerViewAdapter.BaseHelper>(
     val context: Context,
-    var items: List<ItemType>,
+    private var items: List<ItemType>,
     val helper: HelperType,
     private val viewHolderInitialization: (LayoutInflater, parent: ViewGroup) -> ViewHolderType,
 ) : RecyclerView.Adapter<ViewHolderType>() {
@@ -38,19 +39,19 @@ abstract class BaseRecyclerViewAdapter<
     }
 
     @Suppress("UNCHECKED_CAST")
-    abstract class BaseViewHolder<ItemType : BaseItem, ViewBindingType : ViewBinding>(final override var viewBinding: ViewBindingType, open val helper: BaseHelper) : RecyclerView.ViewHolder(viewBinding.root), ViewBindingHandler<ViewBindingType> {
+    abstract class BaseViewHolder<ItemType : Item, ViewBindingType : ViewBinding>(final override var viewBinding: ViewBindingType, open val helper: BaseHelper) : RecyclerView.ViewHolder(viewBinding.root), ViewBindingHandler<ViewBindingType> {
         abstract var item: ItemType
 
         init {
             viewBinding.root.run {
                 setOnClickListener {
-                    helper.onItemClicked(context, item.intrinsicId)
+                    helper.onItemClicked(context, item.name.toString())
                 }
             }
         }
     }
 
     interface BaseHelper {
-        fun onItemClicked(context: Context, id: Long)
+        fun onItemClicked(context: Context, name: String)
     }
 }

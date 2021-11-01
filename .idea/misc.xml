@@ -14,6 +14,7 @@
         <entry key="app/src/main/res/layout/fragment_starships.xml" value="0.3432971014492754" />
         <entry key="app/src/main/res/layout/fragment_vehicles.xml" value="0.3432971014492754" />
         <entry key="app/src/main/res/layout/layout_category_item.xml" value="0.2703125" />
+        <entry key="app/src/main/res/layout/layout_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_navigation_item.xml" value="0.67" />
         <entry key="app/src/main/res/layout/layout_planet_item.xml" value="0.67" />
         <entry key="app/src/main/res/layout/layout_toolbar_custom.xml" value="0.3541666666666667" />

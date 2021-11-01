@@ -1,4 +1,4 @@
-package proto.android.starwarsreference.core.base
+package proto.android.starwarsreference.core
 
 import android.app.Activity
 import android.os.Bundle

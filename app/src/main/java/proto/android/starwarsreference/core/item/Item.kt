@@ -1,10 +1,10 @@
-package proto.android.starwarsreference.core.base
+package proto.android.starwarsreference.core.item
 
 import bogdandonduk.livedatatoolboxlib.NamedItem
 
-interface BaseItem : NamedItem {
-    val intrinsicId: Long
+interface Item : NamedItem {
     val name: CharSequence
+    val url: String?
 
     override fun getItemName() = name.toString()
 }
