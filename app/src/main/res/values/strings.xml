@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Star Wars Reference</string>
-    <string name="terrain">Terrain: %1$s</string>
+    <string name="terrain_template">%1$s: %2$s</string>
     <string name="search">Search …</string>
+    <string name="rotation_period">Rotation period</string>
+    <string name="orbital_period">Orbital period</string>
+    <string name="diameter">Diameter</string>
+    <string name="climate">Climate</string>
+    <string name="gravity">Gravity</string>
+    <string name="terrain">Terrain</string>
+    <string name="surfaceWater">Surface water</string>
+    <string name="population">Population</string>
+    <string name="url">URL</string>
 </resources>

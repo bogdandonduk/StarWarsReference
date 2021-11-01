@@ -11,7 +11,7 @@ object CategoryManager {
     private const val KEY_LAST_OPEN_CATEGORY = "last_open_category"
 
     enum class CATEGORIES(val categoryName: String, val icon: Drawable, val accentIcon: Drawable) {
-        PLANETS("Planets", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
+        PLANETS("Planets", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_public_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_public_accent_24, null)!!),
         STARSHIPS("Starships", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
         VEHICLES("Vehicles", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
         PEOPLE("People", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),

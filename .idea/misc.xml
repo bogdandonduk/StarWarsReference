@@ -5,7 +5,9 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.21354166666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_people_accent_24.xml" value="0.21354166666666666" />
-        <entry key="app/src/main/res/layout/activity_details.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_public_24.xml" value="0.20462962962962963" />
+        <entry key="app/src/main/res/drawable/ic_baseline_public_accent_24.xml" value="0.24259259259259258" />
+        <entry key="app/src/main/res/layout/activity_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/fragment_category.xml" value="0.2703125" />
         <entry key="app/src/main/res/layout/fragment_films.xml" value="0.3432971014492754" />

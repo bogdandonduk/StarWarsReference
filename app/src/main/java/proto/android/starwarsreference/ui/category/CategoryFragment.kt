@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import bogdandonduk.commontoolboxlib.CommonToolbox
@@ -68,8 +70,10 @@ class CategoryFragment : BaseViewBindingHandlerFragment<FragmentCategoryBinding>
                         viewModel.search(text.toString())
 
                         setOnEditorActionListener { _, _, keyEvent ->
-                            if(keyEvent.action == EditorInfo.IME_ACTION_SEARCH)
-                                viewModel.search(text.toString())
+                            keyEvent?.run {
+                                if(action == EditorInfo.IME_ACTION_SEARCH)
+                                    viewModel.search(text.toString())
+                            }
 
                             false
                         }

@@ -23,16 +23,32 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_details_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_details_toolbar" >
 
-    <LinearLayout
-        android:id="@+id/activity_details_content_constraint_layout"
-        android:layout_width="0dp"
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_home_searchbar_divider_linear_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_home_searchbar_divider_linear_layout">
+
+        <LinearLayout
+            android:id="@+id/activity_details_content_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/activity_details_contents_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                tools:text="Contents" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
