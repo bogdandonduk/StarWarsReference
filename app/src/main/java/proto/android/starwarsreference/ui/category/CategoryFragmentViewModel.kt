@@ -31,10 +31,12 @@ class CategoryFragmentViewModel(val categoryRepo: Repo<out Item>) : ViewModel() 
     }
 
     fun search(searchQuery: String) {
-        itemsLive.value?.run {
-            itemsLive.postValue(
-                LiveDataToolbox.searchFilter(searchQuery, toMutableList())
-            )
+        viewModelScope.launch(IO) {
+            categoryRepo.fetchCategoryItems {
+                itemsLive.postValue(
+                    LiveDataToolbox.searchFilter(searchQuery, it.toMutableList())
+                )
+            }
         }
     }
 }

@@ -13,21 +13,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StarWarsReference">
         <activity
-            android:name="proto.android.starwarsreference.ui.home.HomeActivity"
+            android:name=".ui.details.DetailsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.home.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="stateUnchanged" />
 
         <activity-alias
-            android:name="LauncherActivity"
-            android:targetActivity="proto.android.starwarsreference.ui.home.HomeActivity"
-            android:exported="true">
+            android:name=".LauncherActivity"
+            android:exported="true"
+            android:targetActivity=".ui.home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
-
     </application>
 
 </manifest>

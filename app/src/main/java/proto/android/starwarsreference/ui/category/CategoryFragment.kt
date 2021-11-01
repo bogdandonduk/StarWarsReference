@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import bogdandonduk.viewdatabindingwrapperslib.BaseViewBindingHandlerFragment
 import bogdandonduk.viewmodelwrapperslib.automatic.SingleAutomaticInitializationWithInitializationViewModelHandler
@@ -54,7 +56,20 @@ class CategoryFragment : BaseViewBindingHandlerFragment<FragmentCategoryBinding>
                         )
                     }
 
-                    viewModel.load()
+                    viewBinding.activityHomeSearchbarEditText.run {
+                        viewModel.search(text.toString())
+
+                        setOnEditorActionListener { _, _, keyEvent ->
+                            if(keyEvent.action == EditorInfo.IME_ACTION_SEARCH)
+                                viewModel.search(text.toString())
+
+                            false
+                        }
+
+                        addTextChangedListener {
+                            viewModel.search(it.toString())
+                        }
+                    }
                 }
             }
         }

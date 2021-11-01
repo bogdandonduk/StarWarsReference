@@ -1,5 +1,6 @@
 package proto.android.starwarsreference.core.repo
 
+import kotlinx.coroutines.delay
 import org.json.JSONObject
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
@@ -20,32 +21,54 @@ class PlanetsRepo(override val api: API) : Repo<Planet> {
             else instance!!
     }
 
-    override suspend fun fetchCategoryItems(action: (List<Planet>) -> Unit) {
-        api.getCategory(CategoryManager.CATEGORIES.PLANETS.categoryName.lowercase()).subscribe {
-            action(mutableListOf<Planet>().apply {
-                JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                    for(i in 0 until length()) {
-                        val jsonObject = getJSONObject(i)
+    override var loadedItems: List<Planet>? = null
 
-                        add(
-                            Planet(
-                                name = jsonObject.getString("name"),
-                                rotationPeriod = jsonObject.getInt("rotation_period"),
-                                orbitalPeriod = jsonObject.getInt("orbital_period"),
-                                diameter = jsonObject.getInt("diameter"),
-                                climate = jsonObject.getString("climate"),
-                                gravity = jsonObject.getString("climate"),
-                                terrain = jsonObject.getString("terrain"),
-                                surfaceWater = jsonObject.getString("surface_water"),
-                                population = jsonObject.getString("population"),
+    @Volatile
+    override var loadingInProgress: Boolean = false
 
-                                url = jsonObject.getString("url")
-                            )
-                        )
-                    }
+    override suspend fun fetchCategoryItems(forceLoad: Boolean, action: (List<Planet>) -> Unit) {
+        if(!forceLoad && !loadingInProgress && loadedItems != null)
+            action(loadedItems!!)
+        else {
+            if(!loadingInProgress) {
+                loadingInProgress = true
 
+                api.getCategory(CategoryManager.CATEGORIES.PLANETS.categoryName.lowercase()).subscribe {
+                    action(mutableListOf<Planet>().apply {
+                        JSONObject(it.charStream().readText()).getJSONArray("results").run {
+                            for(i in 0 until length()) {
+                                val jsonObject = getJSONObject(i)
+
+                                add(
+                                    Planet(
+                                        name = jsonObject.getString("name"),
+                                        rotationPeriod = jsonObject.getInt("rotation_period"),
+                                        orbitalPeriod = jsonObject.getInt("orbital_period"),
+                                        diameter = jsonObject.getInt("diameter"),
+                                        climate = jsonObject.getString("climate"),
+                                        gravity = jsonObject.getString("climate"),
+                                        terrain = jsonObject.getString("terrain"),
+                                        surfaceWater = jsonObject.getString("surface_water"),
+                                        population = jsonObject.getString("population"),
+
+                                        url = jsonObject.getString("url")
+                                    )
+                                )
+                            }
+
+                        }
+                    }.toList())
                 }
-            }.toList())
+
+
+                loadingInProgress = false
+            } else {
+                while(loadingInProgress) {
+                    delay(Repo.WAITING_DELAY_MILLIS)
+                }
+
+                loadedItems
+            }
         }
     }
 }
