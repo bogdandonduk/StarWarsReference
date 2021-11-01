@@ -12,10 +12,10 @@ object CategoryManager {
 
     enum class CATEGORIES(val categoryName: String, val icon: Drawable, val accentIcon: Drawable) {
         PLANETS("Planets", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_public_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_public_accent_24, null)!!),
-        STARSHIPS("Starships", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
-        VEHICLES("Vehicles", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
-        PEOPLE("People", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
-        FILMS("Films", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!),
+        STARSHIPS("Starships", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_airplanemode_active_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_airplanemode_active_accent_24, null)!!),
+        VEHICLES("Vehicles", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_directions_car_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_directions_car_accent_24, null)!!),
+        PEOPLE("People", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_emoji_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_emoji_people_accent_24, null)!!),
+        FILMS("Films", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_local_movies_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_local_movies_accent_24, null)!!),
         SPECIES("Species", ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_24, null)!!, ResourcesCompat.getDrawable(StarWarsReference.instance.resources, R.drawable.ic_baseline_people_accent_24, null)!!)
     }
 
