@@ -1,7 +1,9 @@
 package proto.android.starwarsreference.core.item
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Vehicle(
     override val name: CharSequence,
     override val model: String,

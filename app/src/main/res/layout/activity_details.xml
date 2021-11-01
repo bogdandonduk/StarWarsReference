@@ -4,6 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.details.DetailsActivity">
+    tools:context=".ui.home.HomeActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/activity_details_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_scrollFlags="scroll|enterAlways" />
+
+    <LinearLayout
+        android:id="@+id/activity_home_searchbar_divider_linear_layout"
+        style="@style/StyleDividerLines"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_details_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/activity_details_content_constraint_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_home_searchbar_divider_linear_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

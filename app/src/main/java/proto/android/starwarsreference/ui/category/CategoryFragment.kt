@@ -2,6 +2,7 @@ package proto.android.starwarsreference.ui.category
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
+import bogdandonduk.commontoolboxlib.CommonToolbox
 import bogdandonduk.viewdatabindingwrapperslib.BaseViewBindingHandlerFragment
 import bogdandonduk.viewmodelwrapperslib.automatic.SingleAutomaticInitializationWithInitializationViewModelHandler
 import bogdandonduk.viewmodelwrapperslib.automatic.SingleAutomaticInitializationWithInitializationViewModelHandlerActivity
@@ -21,6 +23,8 @@ import proto.android.starwarsreference.core.api.StarWarsAPI
 import proto.android.starwarsreference.core.item.Planet
 import proto.android.starwarsreference.core.repo.PlanetsRepo
 import proto.android.starwarsreference.databinding.FragmentCategoryBinding
+import proto.android.starwarsreference.ui.details.DetailsActivity
+import proto.android.starwarsreference.ui.details.DetailsActivityViewModel
 import proto.android.starwarsreference.ui.home.HomeActivity
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -50,7 +54,11 @@ class CategoryFragment : BaseViewBindingHandlerFragment<FragmentCategoryBinding>
                             it,
                             object : BaseRecyclerViewAdapter.BaseHelper {
                                 override fun onItemClicked(context: Context, name: String) {
-
+                                    startActivity(Intent(this@activity, DetailsActivity::class.java).apply {
+                                        putExtra(DetailsActivityViewModel.KEY_ITEM, it.find { item ->
+                                            item.name == name
+                                        })
+                                    })
                                 }
                             }
                         )

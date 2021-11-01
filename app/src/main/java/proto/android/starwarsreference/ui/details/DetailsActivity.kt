@@ -1,12 +1,27 @@
 package proto.android.starwarsreference.ui.details
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import proto.android.starwarsreference.R
+import proto.android.starwarsreference.core.BaseActivity
+import proto.android.starwarsreference.databinding.ActivityDetailsBinding
 
-class DetailsActivity : AppCompatActivity() {
+class DetailsActivity : BaseActivity<ActivityDetailsBinding, DetailsActivityViewModel>(
+    {
+        ActivityDetailsBinding.inflate(it)
+    },
+    {
+        DetailsActivityViewModel(it.intent)
+    }
+) {
+    override var slidable = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
+
+        getInitializedAppBar(this, viewBinding.activityDetailsToolbar)
+            .modifyAsActionBar {
+                getInitializedViewModel(this).item?.name?.run {
+                    title = this
+                }
+            }
     }
 }
