@@ -43,10 +43,11 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/activity_home_content_constraint_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_home_content_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/activity_home_navigation_bar_divider_linear_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

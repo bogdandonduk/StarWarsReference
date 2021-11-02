@@ -2,7 +2,6 @@ package proto.android.starwarsreference.ui.details
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.widget.TextView
 import proto.android.starwarsreference.R
 import proto.android.starwarsreference.core.BaseActivity
 import proto.android.starwarsreference.core.item.*

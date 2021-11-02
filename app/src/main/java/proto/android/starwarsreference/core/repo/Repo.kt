@@ -1,9 +1,7 @@
 package proto.android.starwarsreference.core.repo
 
 import proto.android.starwarsreference.core.api.API
-import proto.android.starwarsreference.core.category.Category
 import proto.android.starwarsreference.core.item.Item
-import proto.android.starwarsreference.core.item.Planet
 
 interface Repo<ItemType : Item> {
     companion object {

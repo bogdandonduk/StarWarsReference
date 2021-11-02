@@ -5,7 +5,6 @@ import org.json.JSONObject
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
 import proto.android.starwarsreference.core.item.Person
-import proto.android.starwarsreference.core.item.Planet
 
 class PeopleRepo private constructor(override val api: API) : Repo<Person> {
     companion object {
@@ -34,7 +33,7 @@ class PeopleRepo private constructor(override val api: API) : Repo<Person> {
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                api.getCategory(CategoryManager.CATEGORIES.PLANETS.categoryName.lowercase()).subscribe {
+                api.getCategory(CategoryManager.CATEGORIES.PEOPLE.categoryName.lowercase()).subscribe {
                     action(mutableListOf<Person>().apply {
                         JSONObject(it.charStream().readText()).getJSONArray("results").run {
                             for(i in 0 until length()) {

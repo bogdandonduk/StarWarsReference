@@ -1,4 +1,4 @@
-package proto.android.starwarsreference.ui.category
+package proto.android.starwarsreference.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import proto.android.starwarsreference.core.BaseRecyclerViewAdapter
 import proto.android.starwarsreference.core.item.Item
 import proto.android.starwarsreference.databinding.LayoutItemBinding
 
-class CategoryFragmentAdapter(
+class HomeContentAdapter(
     context: Context,
     items: List<Item>,
     helper: BaseHelper,
-) : BaseRecyclerViewAdapter<Item, CategoryFragmentAdapter.ViewHolder, BaseRecyclerViewAdapter.BaseHelper>(
+) : BaseRecyclerViewAdapter<Item, HomeContentAdapter.ViewHolder, BaseRecyclerViewAdapter.BaseHelper>(
     context,
     items,
     helper,

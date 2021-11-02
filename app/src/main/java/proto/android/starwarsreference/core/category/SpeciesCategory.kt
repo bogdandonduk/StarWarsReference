@@ -1,7 +1,7 @@
 package proto.android.starwarsreference.core.category
 
 import android.graphics.drawable.Drawable
-import proto.android.starwarsreference.core.item.*
+import proto.android.starwarsreference.core.item.Species
 
 open class SpeciesCategory(
     override val name: CharSequence,

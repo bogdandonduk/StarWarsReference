@@ -1,7 +1,6 @@
 package proto.android.starwarsreference.core.category
 
 import android.graphics.drawable.Drawable
-import proto.android.starwarsreference.core.item.Planet
 import proto.android.starwarsreference.core.item.Starship
 
 open class StarshipsCategory(
