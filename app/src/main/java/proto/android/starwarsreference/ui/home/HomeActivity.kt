@@ -10,8 +10,8 @@ import proto.android.starwarsreference.core.BaseActivity
 import proto.android.starwarsreference.core.BaseRecyclerViewAdapter
 import proto.android.starwarsreference.core.api.StarWarsAPI
 import proto.android.starwarsreference.core.category.CategoryManager
-import proto.android.starwarsreference.core.repo.PeopleRepo
-import proto.android.starwarsreference.core.repo.PlanetsRepo
+import proto.android.starwarsreference.core.item.Item
+import proto.android.starwarsreference.core.repo.*
 import proto.android.starwarsreference.databinding.ActivityHomeBinding
 import proto.android.starwarsreference.ui.details.DetailsActivity
 import proto.android.starwarsreference.ui.details.DetailsActivityViewModel
@@ -54,8 +54,13 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>(
                     getInitializedViewModel(this@HomeActivity).run {
                         setRepo(
                             when(CategoryManager.getLastOpenCategoryName(this@HomeActivity)) {
-                                CategoryManager.CATEGORIES.PLANETS.categoryName -> PlanetsRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
-                                else -> PeopleRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
+                                CategoryManager.CATEGORIES.STARSHIPS.categoryName -> StarshipsRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
+                                CategoryManager.CATEGORIES.VEHICLES.categoryName -> VehiclesRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
+                                CategoryManager.CATEGORIES.PEOPLE.categoryName -> PeopleRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
+                                CategoryManager.CATEGORIES.FILMS.categoryName -> FilmsRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
+                                CategoryManager.CATEGORIES.SPECIES.categoryName -> SpeciesRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
+
+                                else -> PlanetsRepo.getSingleton(Retrofit.Builder().baseUrl(StarWarsAPI.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build().create(StarWarsAPI::class.java))
                             }
                         )
 
@@ -66,23 +71,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>(
         }
 
         getInitializedViewModel(this).observe(this) {
-            viewBinding.activityHomeContentListRecyclerView.adapter.run {
+            (viewBinding.activityHomeContentListRecyclerView.adapter as? HomeContentAdapter).run {
                 if(this != null)
-                    (this as HomeContentAdapter).submitItems(it)
+                    submitItems(it)
                 else
-                    viewBinding.activityHomeContentListRecyclerView.adapter = HomeContentAdapter(
-                        this@HomeActivity,
-                        it,
-                        object : BaseRecyclerViewAdapter.BaseHelper {
-                            override fun onItemClicked(context: Context, name: String) {
-                                startActivity(Intent(this@HomeActivity, DetailsActivity::class.java).apply {
-                                    putExtra(DetailsActivityViewModel.KEY_ITEM, it.find { item ->
-                                        item.name == name
-                                    })
-                                })
-                            }
-                        }
-                    )
+                    initializeContent(it)
             }
         }
 
@@ -102,5 +95,23 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>(
                 getInitializedViewModel(this@HomeActivity).load(it.toString())
             }
         }
+    }
+
+    fun initializeContent(items: List<Item>) {
+        viewBinding.activityHomeContentListRecyclerView.adapter = HomeContentAdapter(
+            this@HomeActivity,
+            items,
+            object : BaseRecyclerViewAdapter.BaseHelper {
+                override fun onItemClicked(context: Context, name: String) {
+                    startActivity(Intent(this@HomeActivity, DetailsActivity::class.java).apply {
+                        putExtra(DetailsActivityViewModel.KEY_ITEM, items.find { item ->
+                            item.name == name
+                        })
+                    })
+                }
+            },
+            viewBinding.activityHomeLoadingProgressBar,
+            null
+        )
     }
 }

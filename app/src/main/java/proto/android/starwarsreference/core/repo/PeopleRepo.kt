@@ -1,10 +1,16 @@
 package proto.android.starwarsreference.core.repo
 
+import android.util.Log
 import kotlinx.coroutines.delay
+import okhttp3.ResponseBody
 import org.json.JSONObject
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
 import proto.android.starwarsreference.core.item.Person
+import timber.log.Timber
+import java.util.concurrent.Flow
 
 class PeopleRepo private constructor(override val api: API) : Repo<Person> {
     companion object {
@@ -26,39 +32,39 @@ class PeopleRepo private constructor(override val api: API) : Repo<Person> {
     @Volatile
     override var loadingInProgress: Boolean = false
 
-    override suspend fun fetchCategoryItems(forceLoad: Boolean, action: (List<Person>) -> Unit) {
+    override suspend fun fetchCategoryItems(forceLoad: Boolean, action: (List<Person>?) -> Unit) {
         if(!forceLoad && !loadingInProgress && loadedItems != null)
             action(loadedItems!!)
         else {
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                api.getCategory(CategoryManager.CATEGORIES.PEOPLE.categoryName.lowercase()).subscribe {
-                    action(mutableListOf<Person>().apply {
-                        JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                            for(i in 0 until length()) {
-                                val jsonObject = getJSONObject(i)
-
-                                add(
-                                    Person(
-                                        name = jsonObject.getString("name"),
-                                        height = jsonObject.getInt("height"),
-                                        mass = jsonObject.getInt("mass"),
-                                        hairColor = jsonObject.getString("hair_color"),
-                                        skinColor = jsonObject.getString("skin_color"),
-                                        eyeColor = jsonObject.getString("eye_color"),
-                                        birthYear = jsonObject.getString("birth_year"),
-                                        gender = jsonObject.getString("gender"),
-
-                                        url = jsonObject.getString("url")
+                try {
+                    api.getCategory(CategoryManager.CATEGORIES.PEOPLE.categoryName.lowercase()).subscribe {
+                        action(mutableListOf<Person>().apply {
+                            JSONObject(it.charStream().readText()).getJSONArray("results").run {
+                                for(i in 0 until length()) {
+                                    val jsonObject = getJSONObject(i)
+                                    add(
+                                        Person(
+                                            name = jsonObject.getString("name"),
+                                            height = jsonObject.getInt("height"),
+                                            mass = jsonObject.getInt("mass"),
+                                            hairColor = jsonObject.getString("hair_color"),
+                                            skinColor = jsonObject.getString("skin_color"),
+                                            eyeColor = jsonObject.getString("eye_color"),
+                                            birthYear = jsonObject.getString("birth_year"),
+                                            gender = jsonObject.getString("gender"),
+                                            url = jsonObject.getString("url")
+                                        )
                                     )
-                                )
+                                }
                             }
-
-                        }
-                    }.toList())
+                        }.toList())
+                    }
+                } catch(thr: Throwable) {
+                    action(null)
                 }
-
 
                 loadingInProgress = false
             } else {

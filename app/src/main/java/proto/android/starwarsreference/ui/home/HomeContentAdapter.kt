@@ -2,6 +2,7 @@ package proto.android.starwarsreference.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import proto.android.starwarsreference.core.BaseRecyclerViewAdapter
 import proto.android.starwarsreference.core.item.Item
@@ -10,11 +11,15 @@ import proto.android.starwarsreference.databinding.LayoutItemBinding
 class HomeContentAdapter(
     context: Context,
     items: List<Item>,
-    helper: BaseHelper,
-) : BaseRecyclerViewAdapter<Item, HomeContentAdapter.ViewHolder, BaseRecyclerViewAdapter.BaseHelper>(
+    helper: BaseRecyclerViewAdapter.BaseHelper,
+    loadingInProgressIndicator: View? = null,
+    noItemsIndicator: View? = null,
+) : BaseRecyclerViewAdapter<HomeContentAdapter.ViewHolder, BaseRecyclerViewAdapter.BaseHelper>(
     context,
     items,
     helper,
+    loadingInProgressIndicator,
+    noItemsIndicator,
     { layoutInflater: LayoutInflater, viewGroup: ViewGroup ->
         ViewHolder(LayoutItemBinding.inflate(layoutInflater, viewGroup, false), helper)
     }

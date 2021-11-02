@@ -9,14 +9,14 @@ data class Starship(
     override val model: String,
     override val manufacturer: String,
     @SerializedName("cost_in_credits")
-    override val costInCredits: Long,
-    override val length: Float,
+    override val costInCredits: String,
+    override val length: String,
     @SerializedName("max_atmosphering_speed")
-    override val maxAtmospheringSpeed: Int,
+    override val maxAtmospheringSpeed: String,
     override val crew: String,
-    override val passengers: Int,
+    override val passengers: String,
     @SerializedName("cargo_capacity")
-    override val cargoCapacity: Long,
+    override val cargoCapacity: String,
     override val consumables: String,
     @SerializedName("hyperdrive_rating")
     val hyperdriveRating: Float,

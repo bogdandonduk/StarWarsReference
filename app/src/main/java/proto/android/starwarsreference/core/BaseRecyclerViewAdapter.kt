@@ -1,6 +1,7 @@
 package proto.android.starwarsreference.core
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,25 +13,23 @@ import bogdandonduk.viewdatabindingwrapperslib.ViewBindingHandler
 import proto.android.starwarsreference.core.item.Item
 
 abstract class BaseRecyclerViewAdapter<
-        ItemType : Item,
-        ViewHolderType : BaseRecyclerViewAdapter.BaseViewHolder<ItemType, out ViewBinding>,
+        ViewHolderType : BaseRecyclerViewAdapter.BaseViewHolder<Item, out ViewBinding>,
         HelperType : BaseRecyclerViewAdapter.BaseHelper>(
     val context: Context,
-    items: List<ItemType>,
+    items: List<Item>,
     val helper: HelperType,
+    // loading indicators
+    var loadingInProgressIndicator: View? = null,
+    var noItemsIndicator: View? = null,
     private val viewHolderInitialization: (LayoutInflater, parent: ViewGroup) -> ViewHolderType,
-) : ListAdapter<ItemType, ViewHolderType>(object : DiffUtil.ItemCallback<ItemType>() {
-    override fun areItemsTheSame(oldItem: ItemType, newItem: ItemType) = newItem.name == oldItem.name
+) : ListAdapter<Item, ViewHolderType>(object : DiffUtil.ItemCallback<Item>() {
+    override fun areItemsTheSame(oldItem: Item, newItem: Item) = newItem.name == oldItem.name
 
-    override fun areContentsTheSame(oldItem: ItemType, newItem: ItemType) = newItem.toString() == oldItem.toString()
+    override fun areContentsTheSame(oldItem: Item, newItem: Item) = newItem.toString() == oldItem.toString()
 }) {
     private lateinit var recyclerView: RecyclerView
 
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-    // loading indicators
-    var loadingInProgressIndicator: View? = null
-    var noItemsIndicator: View? = null
 
     @Volatile var scrollToTopAfterUpdate = true
 
@@ -49,6 +48,11 @@ abstract class BaseRecyclerViewAdapter<
     }
 
     override fun getItemCount() = currentList.size
+
+    fun setIndicatorViews(loadingInProgressIndicator: View?, noItemsIndicator: View?) {
+        this.loadingInProgressIndicator = loadingInProgressIndicator
+        this.noItemsIndicator = noItemsIndicator
+    }
 
     private fun configureIndicators(newItemsCount: Int) {
         if(newItemsCount > 0) {
@@ -71,7 +75,7 @@ abstract class BaseRecyclerViewAdapter<
             notifyItemChanged(i)
     }
 
-    fun submitItems(items: List<ItemType>, rebindAll: Boolean = false) {
+    fun submitItems(items: List<Item>, rebindAll: Boolean = false) {
         configureIndicators(items.size)
 
         submitList(items) {

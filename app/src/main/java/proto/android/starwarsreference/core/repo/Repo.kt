@@ -14,5 +14,5 @@ interface Repo<ItemType : Item> {
 
     var loadingInProgress: Boolean
 
-    suspend fun fetchCategoryItems(forceLoad: Boolean = false, action: (List<ItemType>) -> Unit)
+    suspend fun fetchCategoryItems(forceLoad: Boolean = false, action: (List<ItemType>?) -> Unit)
 }

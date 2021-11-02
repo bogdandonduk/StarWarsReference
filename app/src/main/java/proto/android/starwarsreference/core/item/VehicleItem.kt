@@ -4,12 +4,12 @@ interface VehicleItem : Item {
     override val name: CharSequence
     val model: String
     val manufacturer: String
-    val costInCredits: Long
-    val length: Float
-    val maxAtmospheringSpeed: Int
+    val costInCredits: String
+    val length: String
+    val maxAtmospheringSpeed: String
     val crew: String
-    val passengers: Int
-    val cargoCapacity: Long
+    val passengers: String
+    val cargoCapacity: String
     val consumables: String
     val `class`: String
 }

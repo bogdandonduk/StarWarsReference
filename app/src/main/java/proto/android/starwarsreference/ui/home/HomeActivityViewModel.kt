@@ -27,7 +27,7 @@ class HomeActivityViewModel @Inject constructor(private var repo: Repo<out Item>
         viewModelScope.launch(Dispatchers.IO) {
             repo.fetchCategoryItems {
                 _itemsLive.postValue(
-                    if(searchQuery != null && searchQuery.isNotEmpty())
+                    if(it != null && searchQuery != null && searchQuery.isNotEmpty())
                         LiveDataToolbox.searchFilter(searchQuery, it.toMutableList())
                     else
                         it

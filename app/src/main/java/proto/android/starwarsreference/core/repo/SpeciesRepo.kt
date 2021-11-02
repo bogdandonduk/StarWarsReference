@@ -1,32 +1,39 @@
 package proto.android.starwarsreference.core.repo
 
+import android.util.Log
 import kotlinx.coroutines.delay
+import okhttp3.ResponseBody
 import org.json.JSONObject
+import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
-import proto.android.starwarsreference.core.item.Planet
+import proto.android.starwarsreference.core.item.Person
+import proto.android.starwarsreference.core.item.Species
+import timber.log.Timber
+import java.util.concurrent.Flow
 
-class PlanetsRepo private constructor(override val api: API) : Repo<Planet> {
+class SpeciesRepo private constructor(override val api: API) : Repo<Species> {
     companion object {
         @Volatile
-        private var instance: PlanetsRepo? = null
+        private var instance: SpeciesRepo? = null
 
         fun getSingleton(api: API) =
             if(instance == null)
                 synchronized(this) {
-                    instance = PlanetsRepo(api)
+                    instance = SpeciesRepo(api)
 
                     return instance!!
                 }
             else instance!!
     }
 
-    override var loadedItems: List<Planet>? = null
+    override var loadedItems: List<Species>? = null
 
     @Volatile
     override var loadingInProgress: Boolean = false
 
-    override suspend fun fetchCategoryItems(forceLoad: Boolean, action: (List<Planet>?) -> Unit) {
+    override suspend fun fetchCategoryItems(forceLoad: Boolean, action: (List<Species>?) -> Unit) {
         if(!forceLoad && !loadingInProgress && loadedItems != null)
             action(loadedItems!!)
         else {
@@ -34,33 +41,30 @@ class PlanetsRepo private constructor(override val api: API) : Repo<Planet> {
                 loadingInProgress = true
 
                 try {
-                    api.getCategory(CategoryManager.CATEGORIES.PLANETS.categoryName.lowercase()).subscribe {
-                        action(mutableListOf<Planet>().apply {
+                    api.getCategory(CategoryManager.CATEGORIES.SPECIES.categoryName.lowercase()).subscribe {
+                        action(mutableListOf<Species>().apply {
                             JSONObject(it.charStream().readText()).getJSONArray("results").run {
                                 for(i in 0 until length()) {
                                     val jsonObject = getJSONObject(i)
-
                                     add(
-                                        Planet(
+                                        Species(
                                             name = jsonObject.getString("name"),
-                                            rotationPeriod = jsonObject.getInt("rotation_period"),
-                                            orbitalPeriod = jsonObject.getInt("orbital_period"),
-                                            diameter = jsonObject.getInt("diameter"),
-                                            climate = jsonObject.getString("climate"),
-                                            gravity = jsonObject.getString("climate"),
-                                            terrain = jsonObject.getString("terrain"),
-                                            surfaceWater = jsonObject.getString("surface_water"),
-                                            population = jsonObject.getString("population"),
-
+                                            classification = jsonObject.getString("classification"),
+                                            designation = jsonObject.getString("designation"),
+                                            averageHeight = jsonObject.getString("average_height"),
+                                            hairColors = jsonObject.getString("hair_colors"),
+                                            skinColors = jsonObject.getString("skin_colors"),
+                                            eyeColors = jsonObject.getString("eye_colors"),
+                                            averageLifespan = jsonObject.getString("average_lifespan"),
+                                            language = jsonObject.getString("language"),
                                             url = jsonObject.getString("url")
                                         )
                                     )
                                 }
-
                             }
                         }.toList())
                     }
-                } catch (thr: Throwable) {
+                } catch(thr: Throwable) {
                     action(null)
                 }
 
