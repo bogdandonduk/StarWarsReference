@@ -12,7 +12,7 @@ interface Repo<ItemType : Item> {
 
     val api: API
 
-    var loadedItems: List<Planet>?
+    var loadedItems: List<ItemType>?
 
     var loadingInProgress: Boolean
 

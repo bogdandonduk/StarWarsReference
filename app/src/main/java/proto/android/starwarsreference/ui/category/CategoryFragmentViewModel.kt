@@ -10,14 +10,15 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import proto.android.starwarsreference.core.item.Item
 import proto.android.starwarsreference.core.repo.Repo
+import javax.inject.Inject
 
-class CategoryFragmentViewModel(val categoryRepo: Repo<out Item>) : ViewModel() {
-    private val itemsLive: MutableLiveData<List<Item>> = MutableLiveData()
+class CategoryFragmentViewModel @Inject constructor(private val categoryRepo: Repo<out Item>) : ViewModel() {
+    private val _itemsLive: MutableLiveData<List<Item>> = MutableLiveData()
 
-    fun getItemsLive() = itemsLive as LiveData<List<Item>>
+    val itemsLive = _itemsLive as LiveData<List<Item>>
 
     fun observe(lifecycleOwner: LifecycleOwner, action: (items: List<Item>) -> Unit) {
-        itemsLive.observe(lifecycleOwner) {
+        _itemsLive.observe(lifecycleOwner) {
             action(it)
         }
     }
@@ -25,7 +26,7 @@ class CategoryFragmentViewModel(val categoryRepo: Repo<out Item>) : ViewModel() 
     fun load() {
         viewModelScope.launch(IO) {
             categoryRepo.fetchCategoryItems {
-                itemsLive.postValue(it)
+                _itemsLive.postValue(it)
             }
         }
     }
@@ -33,7 +34,7 @@ class CategoryFragmentViewModel(val categoryRepo: Repo<out Item>) : ViewModel() 
     fun search(searchQuery: String) {
         viewModelScope.launch(IO) {
             categoryRepo.fetchCategoryItems {
-                itemsLive.postValue(
+                _itemsLive.postValue(
                     LiveDataToolbox.searchFilter(searchQuery, it.toMutableList())
                 )
             }
