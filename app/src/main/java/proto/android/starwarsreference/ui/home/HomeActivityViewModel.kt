@@ -6,21 +6,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import proto.android.starwarsreference.core.item.Item
 import proto.android.starwarsreference.core.repo.Repo
+import proto.android.starwarsreference.ui.home.di.RepoModule
 import javax.inject.Inject
 
-class HomeActivityViewModel @Inject constructor(private var repo: Repo<out Item>) : ViewModel() {
+class HomeActivityViewModel @Inject constructor(var repo: Repo<out Item>) : ViewModel() {
     private val _itemsLive: MutableLiveData<List<Item>> = MutableLiveData()
 
     val itemsLive = _itemsLive as LiveData<List<Item>>
 
-    fun setRepo(repo: Repo<out Item>) {
-        this.repo = repo
-    }
-
-    fun observe(lifecycleOwner: LifecycleOwner, action: (items: List<Item>) -> Unit) {
+    fun observe(lifecycleOwner: LifecycleOwner, action: (items: List<Item>?) -> Unit) {
         _itemsLive.observe(lifecycleOwner) {
             action(it)
         }
+    }
+
+    fun initializeRepo() {
+        repo = RepoModule.getRepo()
     }
 
     fun load(searchQuery: String? = null) {

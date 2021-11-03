@@ -1,6 +1,5 @@
 package proto.android.starwarsreference.core
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +11,12 @@ import bogdandonduk.appbartoolboxandroidlib.appbar.AppBarHandler
 import bogdandonduk.appbartoolboxandroidlib.drawer.AppBarDrawerToggle
 import bogdandonduk.commontoolboxlib.CommonToolbox
 import bogdandonduk.viewdatabindingwrapperslib.BaseViewBindingHandlerActivity
-import bogdandonduk.viewmodelwrapperslib.automatic.SingleAutomaticInitializationWithInitializationViewModelHandlerActivity
 import com.r0adkll.slidr.Slidr
 import com.r0adkll.slidr.model.SlidrInterface
 
 abstract class BaseActivity<ViewBindingType : ViewBinding, ViewModelType : ViewModel>(
-    viewBindingInflation: (layoutInflater: LayoutInflater) -> ViewBindingType,
-    override var viewModelInitialization: (Activity) -> ViewModelType
+    viewBindingInflation: (layoutInflater: LayoutInflater) -> ViewBindingType
 ) : BaseViewBindingHandlerActivity<ViewBindingType>(viewBindingInflation),
-    SingleAutomaticInitializationWithInitializationViewModelHandlerActivity<ViewModelType>,
     AppBarHandler,
     SlidrHandler {
     override var appBar: AppBar? = null

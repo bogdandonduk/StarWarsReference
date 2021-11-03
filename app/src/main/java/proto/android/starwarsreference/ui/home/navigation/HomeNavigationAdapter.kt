@@ -1,8 +1,6 @@
 package proto.android.starwarsreference.ui.home.navigation
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import proto.android.starwarsreference.R
 import proto.android.starwarsreference.core.BaseRecyclerViewAdapter
@@ -13,16 +11,16 @@ import proto.android.starwarsreference.databinding.LayoutNavigationItemBinding
 
 class HomeNavigationAdapter(
     context: Context,
-    items: List<Category<*>>,
-    helper: BaseHelper,
-) : BaseRecyclerViewAdapter<HomeNavigationAdapter.ViewHolder, BaseRecyclerViewAdapter.BaseHelper>(
+    items: List<Category<out Item>>,
+    helper: BaseHelper?,
+) : BaseRecyclerViewAdapter<Category<out Item>, BaseRecyclerViewAdapter.BaseViewHolder<Category<out Item>, LayoutNavigationItemBinding>, BaseRecyclerViewAdapter.BaseHelper>(
     context,
     items,
     helper,
     null,
     null,
-    { layoutInflater: LayoutInflater, viewGroup: ViewGroup ->
-        ViewHolder(LayoutNavigationItemBinding.inflate(layoutInflater, viewGroup, false), helper)
+    { layoutInflater, viewGroup, adapter ->
+        BaseViewHolder(LayoutNavigationItemBinding.inflate(layoutInflater, viewGroup, false), adapter)
     }
 ) {
     private var lastOpenCategoryName: String = CategoryManager.getLastOpenCategoryName(context)
@@ -30,12 +28,7 @@ class HomeNavigationAdapter(
     private val textColor = ResourcesCompat.getColor(context.resources, R.color.text, null)
     private val accentColor = ResourcesCompat.getColor(context.resources, R.color.accent, null)
 
-    class ViewHolder(viewBinding: LayoutNavigationItemBinding, helper: BaseHelper) : BaseRecyclerViewAdapter.BaseViewHolder<Item, LayoutNavigationItemBinding>(viewBinding, helper) {
-        override lateinit var item: Item
-        fun getCastItem() = item as Category<*>
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<Category<out Item>, LayoutNavigationItemBinding>, position: Int) {
         super.onBindViewHolder(holder, position)
 
         holder.run {
@@ -44,11 +37,11 @@ class HomeNavigationAdapter(
             if(item.name != lastOpenCategoryName) {
                 viewBinding.layoutNavigationItemLabelTextView.setTextColor(textColor)
 
-                viewBinding.layoutNavigationItemIconImageView.setImageDrawable(getCastItem().icon)
+                viewBinding.layoutNavigationItemIconImageView.setImageDrawable(item.icon)
             } else {
                 viewBinding.layoutNavigationItemLabelTextView.setTextColor(accentColor)
 
-                viewBinding.layoutNavigationItemIconImageView.setImageDrawable(getCastItem().accentIcon)
+                viewBinding.layoutNavigationItemIconImageView.setImageDrawable(item.accentIcon)
             }
         }
     }

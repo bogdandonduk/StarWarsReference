@@ -11,5 +11,11 @@ class StarWarsReference : Application() {
         super.onCreate()
 
         instance = this
+
+        preloadRepos()
+    }
+
+    private fun preloadRepos() {
+
     }
 }

@@ -1,34 +1,28 @@
 package proto.android.starwarsreference.ui.home
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import proto.android.starwarsreference.core.BaseRecyclerViewAdapter
 import proto.android.starwarsreference.core.item.Item
 import proto.android.starwarsreference.databinding.LayoutItemBinding
 
 class HomeContentAdapter(
     context: Context,
-    items: List<Item>,
-    helper: BaseRecyclerViewAdapter.BaseHelper,
+    items: List<Item>?,
+    helper: BaseHelper?,
     loadingInProgressIndicator: View? = null,
     noItemsIndicator: View? = null,
-) : BaseRecyclerViewAdapter<HomeContentAdapter.ViewHolder, BaseRecyclerViewAdapter.BaseHelper>(
+) : BaseRecyclerViewAdapter<Item, BaseRecyclerViewAdapter.BaseViewHolder<Item, LayoutItemBinding>, BaseRecyclerViewAdapter.BaseHelper>(
     context,
     items,
     helper,
     loadingInProgressIndicator,
     noItemsIndicator,
-    { layoutInflater: LayoutInflater, viewGroup: ViewGroup ->
-        ViewHolder(LayoutItemBinding.inflate(layoutInflater, viewGroup, false), helper)
+    { layoutInflater, viewGroup, adapter ->
+        BaseViewHolder(LayoutItemBinding.inflate(layoutInflater, viewGroup, false), adapter)
     }
 ) {
-    class ViewHolder(viewBinding: LayoutItemBinding, helper: BaseHelper) : BaseRecyclerViewAdapter.BaseViewHolder<Item, LayoutItemBinding>(viewBinding, helper) {
-        override lateinit var item: Item
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<Item, LayoutItemBinding>, position: Int) {
         super.onBindViewHolder(holder, position)
 
         holder.run {

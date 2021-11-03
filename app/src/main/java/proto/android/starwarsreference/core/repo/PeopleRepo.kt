@@ -1,16 +1,10 @@
 package proto.android.starwarsreference.core.repo
 
-import android.util.Log
 import kotlinx.coroutines.delay
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
 import proto.android.starwarsreference.core.item.Person
-import timber.log.Timber
-import java.util.concurrent.Flow
 
 class PeopleRepo private constructor(override val api: API) : Repo<Person> {
     companion object {
@@ -39,17 +33,20 @@ class PeopleRepo private constructor(override val api: API) : Repo<Person> {
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                try {
-                    api.getCategory(CategoryManager.CATEGORIES.PEOPLE.categoryName.lowercase()).subscribe {
-                        action(mutableListOf<Person>().apply {
-                            JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                                for(i in 0 until length()) {
+                fun getItems(items: MutableList<Person>, pageIndex: Int = 1) {
+                    api.getCategory(CategoryManager.CATEGORIES.PEOPLE.categoryName.lowercase(), pageIndex).subscribe {
+                        val rootJsonObject = JSONObject(it.charStream().readText())
+
+                        items.apply {
+                            rootJsonObject.getJSONArray("results").run {
+                                for (i in 0 until length()) {
                                     val jsonObject = getJSONObject(i)
+
                                     add(
                                         Person(
                                             name = jsonObject.getString("name"),
-                                            height = jsonObject.getInt("height"),
-                                            mass = jsonObject.getInt("mass"),
+                                            height = jsonObject.getString("height"),
+                                            mass = jsonObject.getString("mass"),
                                             hairColor = jsonObject.getString("hair_color"),
                                             skinColor = jsonObject.getString("skin_color"),
                                             eyeColor = jsonObject.getString("eye_color"),
@@ -59,10 +56,20 @@ class PeopleRepo private constructor(override val api: API) : Repo<Person> {
                                         )
                                     )
                                 }
+
                             }
-                        }.toList())
+                        }
+
+                        if(rootJsonObject.getString("next") != "null")
+                            getItems(items, pageIndex + 1)
+                        else
+                            action(items)
                     }
-                } catch(thr: Throwable) {
+                }
+
+                try {
+                    getItems(mutableListOf())
+                } catch (thr: Throwable) {
                     action(null)
                 }
 

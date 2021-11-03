@@ -1,7 +1,6 @@
 package proto.android.starwarsreference.core
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +12,20 @@ import bogdandonduk.viewdatabindingwrapperslib.ViewBindingHandler
 import proto.android.starwarsreference.core.item.Item
 
 abstract class BaseRecyclerViewAdapter<
-        ViewHolderType : BaseRecyclerViewAdapter.BaseViewHolder<Item, out ViewBinding>,
+        ItemType : Item,
+        ViewHolderType : BaseRecyclerViewAdapter.BaseViewHolder<ItemType, out ViewBinding>,
         HelperType : BaseRecyclerViewAdapter.BaseHelper>(
     val context: Context,
-    items: List<Item>,
-    val helper: HelperType,
+    items: List<ItemType>?,
+    var helper: HelperType? = null,
     // loading indicators
     var loadingInProgressIndicator: View? = null,
     var noItemsIndicator: View? = null,
-    private val viewHolderInitialization: (LayoutInflater, parent: ViewGroup) -> ViewHolderType,
-) : ListAdapter<Item, ViewHolderType>(object : DiffUtil.ItemCallback<Item>() {
-    override fun areItemsTheSame(oldItem: Item, newItem: Item) = newItem.name == oldItem.name
+    private val viewHolderInitialization: (LayoutInflater, parent: ViewGroup, adapter: BaseRecyclerViewAdapter<ItemType, ViewHolderType, HelperType>) -> ViewHolderType,
+) : ListAdapter<ItemType, ViewHolderType>(object : DiffUtil.ItemCallback<ItemType>() {
+    override fun areItemsTheSame(oldItem: ItemType, newItem: ItemType) = newItem.name == oldItem.name
 
-    override fun areContentsTheSame(oldItem: Item, newItem: Item) = newItem.toString() == oldItem.toString()
+    override fun areContentsTheSame(oldItem: ItemType, newItem: ItemType) = newItem.toString() == oldItem.toString()
 }) {
     private lateinit var recyclerView: RecyclerView
 
@@ -41,7 +41,7 @@ abstract class BaseRecyclerViewAdapter<
         this.recyclerView = recyclerView
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = viewHolderInitialization.invoke(layoutInflater, parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = viewHolderInitialization.invoke(layoutInflater, parent, this)
 
     override fun onBindViewHolder(holder: ViewHolderType, position: Int) {
         holder.item = currentList[position]
@@ -54,7 +54,7 @@ abstract class BaseRecyclerViewAdapter<
         this.noItemsIndicator = noItemsIndicator
     }
 
-    private fun configureIndicators(newItemsCount: Int) {
+    private fun postConfigureIndicators(newItemsCount: Int) {
         if(newItemsCount > 0) {
             if(this::recyclerView.isInitialized)
                 recyclerView.visibility = View.VISIBLE
@@ -65,9 +65,14 @@ abstract class BaseRecyclerViewAdapter<
             if(this::recyclerView.isInitialized)
                 recyclerView.visibility = View.GONE
 
-            noItemsIndicator?.visibility = View.VISIBLE
             loadingInProgressIndicator?.visibility = View.GONE
+            noItemsIndicator?.visibility = View.VISIBLE
         }
+    }
+
+    private fun preConfigureIndicators() {
+        noItemsIndicator?.visibility = View.GONE
+        loadingInProgressIndicator?.visibility = View.VISIBLE
     }
 
     open fun rebind() {
@@ -75,8 +80,8 @@ abstract class BaseRecyclerViewAdapter<
             notifyItemChanged(i)
     }
 
-    fun submitItems(items: List<Item>, rebindAll: Boolean = false) {
-        configureIndicators(items.size)
+    fun submitItems(items: List<ItemType>?, rebindAll: Boolean = false) {
+        preConfigureIndicators()
 
         submitList(items) {
             if(this::recyclerView.isInitialized)
@@ -85,17 +90,18 @@ abstract class BaseRecyclerViewAdapter<
 
             if(rebindAll)
                 rebind()
+
+            postConfigureIndicators(items?.size ?: 0)
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    abstract class BaseViewHolder<ItemType : Item, ViewBindingType : ViewBinding>(final override var viewBinding: ViewBindingType, open val helper: BaseHelper) : RecyclerView.ViewHolder(viewBinding.root), ViewBindingHandler<ViewBindingType> {
-        abstract var item: ItemType
+    class BaseViewHolder<ItemType : Item, ViewBindingType : ViewBinding>(override var viewBinding: ViewBindingType, val adapter: BaseRecyclerViewAdapter<ItemType, out BaseViewHolder<ItemType, ViewBindingType>, out BaseHelper>) : RecyclerView.ViewHolder(viewBinding.root), ViewBindingHandler<ViewBindingType> {
+        lateinit var item: ItemType
 
         init {
             viewBinding.root.run {
                 setOnClickListener {
-                    helper.onItemClicked(context, item.name.toString())
+                    adapter.helper?.onItemClicked(context, item.name.toString())
                 }
             }
         }
@@ -103,5 +109,9 @@ abstract class BaseRecyclerViewAdapter<
 
     interface BaseHelper {
         fun onItemClicked(context: Context, name: String)
+    }
+
+    fun findItemByName(name: String) = currentList.find {
+        it.name == name
     }
 }

@@ -8,11 +8,11 @@ data class Planet(
     override val name: CharSequence,
 
     @SerializedName("rotation_period")
-    val rotationPeriod: Int,
+    val rotationPeriod: String,
     @SerializedName("orbital_period")
-    val orbitalPeriod: Int,
+    val orbitalPeriod: String,
 
-    val diameter: Int,
+    val diameter: String,
     val climate: String,
     val gravity: String,
     val terrain: String,

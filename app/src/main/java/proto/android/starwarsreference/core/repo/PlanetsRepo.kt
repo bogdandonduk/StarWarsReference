@@ -33,36 +33,47 @@ class PlanetsRepo private constructor(override val api: API) : Repo<Planet> {
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                try {
-                    api.getCategory(CategoryManager.CATEGORIES.PLANETS.categoryName.lowercase()).subscribe {
-                        action(mutableListOf<Planet>().apply {
-                            JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                                for(i in 0 until length()) {
-                                    val jsonObject = getJSONObject(i)
+                fun getItems(items: MutableList<Planet>, pageIndex: Int = 1) {
+                    try {
+                        api.getCategory(CategoryManager.CATEGORIES.PLANETS.categoryName.lowercase(), pageIndex).subscribe {
+                            val rootJsonObject = JSONObject(it.charStream().readText())
 
-                                    add(
-                                        Planet(
-                                            name = jsonObject.getString("name"),
-                                            rotationPeriod = jsonObject.getInt("rotation_period"),
-                                            orbitalPeriod = jsonObject.getInt("orbital_period"),
-                                            diameter = jsonObject.getInt("diameter"),
-                                            climate = jsonObject.getString("climate"),
-                                            gravity = jsonObject.getString("climate"),
-                                            terrain = jsonObject.getString("terrain"),
-                                            surfaceWater = jsonObject.getString("surface_water"),
-                                            population = jsonObject.getString("population"),
+                            items.apply {
+                                rootJsonObject.getJSONArray("results").run {
+                                    for (i in 0 until length()) {
+                                        val jsonObject = getJSONObject(i)
 
-                                            url = jsonObject.getString("url")
+                                        add(
+                                            Planet(
+                                                name = jsonObject.getString("name"),
+                                                rotationPeriod = jsonObject.getString("rotation_period"),
+                                                orbitalPeriod = jsonObject.getString("orbital_period"),
+                                                diameter = jsonObject.getString("diameter"),
+                                                climate = jsonObject.getString("climate"),
+                                                gravity = jsonObject.getString("climate"),
+                                                terrain = jsonObject.getString("terrain"),
+                                                surfaceWater = jsonObject.getString("surface_water"),
+                                                population = jsonObject.getString("population"),
+
+                                                url = jsonObject.getString("url")
+                                            )
                                         )
-                                    )
-                                }
+                                    }
 
+                                }
                             }
-                        }.toList())
+
+                            if(rootJsonObject.getString("next") != "null")
+                                getItems(items, pageIndex + 1)
+                            else
+                                action(items)
+                        }
+                    } catch (thr: Throwable) {
+                        action(items)
                     }
-                } catch (thr: Throwable) {
-                    action(null)
                 }
+
+                getItems(mutableListOf())
 
                 loadingInProgress = false
             } else {

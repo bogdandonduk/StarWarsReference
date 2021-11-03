@@ -4,7 +4,6 @@ import kotlinx.coroutines.delay
 import org.json.JSONObject
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
-import proto.android.starwarsreference.core.item.Starship
 import proto.android.starwarsreference.core.item.Vehicle
 
 class VehiclesRepo private constructor(override val api: API) : Repo<Vehicle> {
@@ -34,11 +33,13 @@ class VehiclesRepo private constructor(override val api: API) : Repo<Vehicle> {
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                try {
-                    api.getCategory(CategoryManager.CATEGORIES.VEHICLES.categoryName.lowercase()).subscribe {
-                        action(mutableListOf<Vehicle>().apply {
-                            JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                                for(i in 0 until length()) {
+                fun getItems(items: MutableList<Vehicle>, pageIndex: Int = 1) {
+                    api.getCategory(CategoryManager.CATEGORIES.VEHICLES.categoryName.lowercase(), pageIndex).subscribe {
+                        val rootJsonObject = JSONObject(it.charStream().readText())
+
+                        items.apply {
+                            rootJsonObject.getJSONArray("results").run {
+                                for (i in 0 until length()) {
                                     val jsonObject = getJSONObject(i)
 
                                     add(
@@ -60,8 +61,17 @@ class VehiclesRepo private constructor(override val api: API) : Repo<Vehicle> {
                                 }
 
                             }
-                        }.toList())
+                        }
+
+                        if(rootJsonObject.getString("next") != "null")
+                            getItems(items, pageIndex + 1)
+                        else
+                            action(items)
                     }
+                }
+
+                try {
+                    getItems(mutableListOf())
                 } catch (thr: Throwable) {
                     action(null)
                 }

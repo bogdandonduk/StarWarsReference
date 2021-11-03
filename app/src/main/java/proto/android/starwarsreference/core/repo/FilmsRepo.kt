@@ -5,8 +5,6 @@ import org.json.JSONObject
 import proto.android.starwarsreference.core.api.API
 import proto.android.starwarsreference.core.category.CategoryManager
 import proto.android.starwarsreference.core.item.Film
-import proto.android.starwarsreference.core.item.Starship
-import proto.android.starwarsreference.core.item.Vehicle
 
 class FilmsRepo private constructor(override val api: API) : Repo<Film> {
     companion object {
@@ -35,32 +33,43 @@ class FilmsRepo private constructor(override val api: API) : Repo<Film> {
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                try {
-                    api.getCategory(CategoryManager.CATEGORIES.FILMS.categoryName.lowercase()).subscribe {
-                        action(mutableListOf<Film>().apply {
-                            JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                                for(i in 0 until length()) {
-                                    val jsonObject = getJSONObject(i)
+                fun getItems(items: MutableList<Film>, pageIndex: Int = 1) {
+                    try {
+                        api.getCategory(CategoryManager.CATEGORIES.FILMS.categoryName.lowercase(), pageIndex).subscribe {
+                            val rootJsonObject = JSONObject(it.charStream().readText())
 
-                                    add(
-                                        Film(
-                                            name = jsonObject.getString("title"),
-                                            episodeId = jsonObject.getInt("episode_id"),
-                                            openingCrawl = jsonObject.getString("opening_crawl"),
-                                            director = jsonObject.getString("director"),
-                                            producer = jsonObject.getString("producer"),
-                                            releaseDate = jsonObject.getString("release_date"),
-                                            url = jsonObject.getString("url")
+                            items.apply {
+                                rootJsonObject.getJSONArray("results").run {
+                                    for (i in 0 until length()) {
+                                        val jsonObject = getJSONObject(i)
+
+                                        add(
+                                            Film(
+                                                name = jsonObject.getString("title"),
+                                                episodeId = jsonObject.getString("episode_id"),
+                                                openingCrawl = jsonObject.getString("opening_crawl"),
+                                                director = jsonObject.getString("director"),
+                                                producer = jsonObject.getString("producer"),
+                                                releaseDate = jsonObject.getString("release_date"),
+                                                url = jsonObject.getString("url")
+                                            )
                                         )
-                                    )
-                                }
+                                    }
 
+                                }
                             }
-                        }.toList())
+
+                            if(rootJsonObject.getString("next") != "null")
+                                getItems(items, pageIndex + 1)
+                            else
+                                action(items)
+                        }
+                    } catch (thr: Throwable) {
+                        action(items)
                     }
-                } catch (thr: Throwable) {
-                    action(null)
                 }
+
+                getItems(mutableListOf())
 
                 loadingInProgress = false
             } else {

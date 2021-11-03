@@ -24,4 +24,25 @@
     <string name="MGLT">MGLT</string>
     <string name="starship_class">Starship class</string>
     <string name="vehicle_class">Vehicle class</string>
+    <string name="no_items">No items</string>
+    <string name="height">Height</string>
+    <string name="mass">Mass</string>
+    <string name="hair_color">Hair color</string>
+    <string name="skin_color">Skin color</string>
+    <string name="eye_color">Eye color</string>
+    <string name="birth_year">Birth year</string>
+    <string name="gender">Gender</string>
+    <string name="episode_id">Episode id</string>
+    <string name="opening_crawl">Opening crawl</string>
+    <string name="director">Director</string>
+    <string name="producer">Producer</string>
+    <string name="release_date">Release date</string>
+    <string name="classification">Classification</string>
+    <string name="designation">Designation</string>
+    <string name="average_height">Average height</string>
+    <string name="skin_colors">Skin colors</string>
+    <string name="hair_colors">Hair colors</string>
+    <string name="eye_colors">Eye colors</string>
+    <string name="average_lifespan">Average lifespan</string>
+    <string name="language">Language</string>
 </resources>

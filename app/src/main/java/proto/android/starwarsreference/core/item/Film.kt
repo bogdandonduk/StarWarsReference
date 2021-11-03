@@ -8,7 +8,7 @@ data class Film(
     @SerializedName("title")
     override val name: CharSequence,
     @SerializedName("episode_id")
-    val episodeId: Int,
+    val episodeId: String,
     @SerializedName("opening_crawl")
     val openingCrawl: String,
     val director: String,

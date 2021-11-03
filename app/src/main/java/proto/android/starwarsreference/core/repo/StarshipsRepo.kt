@@ -33,11 +33,13 @@ class StarshipsRepo private constructor(override val api: API) : Repo<Starship> 
             if(!loadingInProgress) {
                 loadingInProgress = true
 
-                try {
-                    api.getCategory(CategoryManager.CATEGORIES.STARSHIPS.categoryName.lowercase()).subscribe {
-                        action(mutableListOf<Starship>().apply {
-                            JSONObject(it.charStream().readText()).getJSONArray("results").run {
-                                for(i in 0 until length()) {
+                fun getItems(items: MutableList<Starship>, pageIndex: Int = 1) {
+                    api.getCategory(CategoryManager.CATEGORIES.STARSHIPS.categoryName.lowercase(), pageIndex).subscribe {
+                        val rootJsonObject = JSONObject(it.charStream().readText())
+
+                        items.apply {
+                            rootJsonObject.getJSONArray("results").run {
+                                for (i in 0 until length()) {
                                     val jsonObject = getJSONObject(i)
 
                                     add(
@@ -52,8 +54,8 @@ class StarshipsRepo private constructor(override val api: API) : Repo<Starship> 
                                             passengers = jsonObject.getString("passengers"),
                                             cargoCapacity = jsonObject.getString("cargo_capacity"),
                                             consumables = jsonObject.getString("consumables"),
-                                            hyperdriveRating = jsonObject.getDouble("hyperdrive_rating").toFloat(),
-                                            MGLT = jsonObject.getInt("MGLT"),
+                                            hyperdriveRating = jsonObject.getString("hyperdrive_rating"),
+                                            MGLT = jsonObject.getString("MGLT"),
                                             `class` = jsonObject.getString("starship_class"),
                                             url = jsonObject.getString("url")
                                         )
@@ -61,8 +63,17 @@ class StarshipsRepo private constructor(override val api: API) : Repo<Starship> 
                                 }
 
                             }
-                        }.toList())
+                        }
+
+                        if(rootJsonObject.getString("next") != "null")
+                            getItems(items, pageIndex + 1)
+                        else
+                            action(items)
                     }
+                }
+
+                try {
+                    getItems(mutableListOf())
                 } catch (thr: Throwable) {
                     action(null)
                 }

@@ -19,8 +19,8 @@ data class Starship(
     override val cargoCapacity: String,
     override val consumables: String,
     @SerializedName("hyperdrive_rating")
-    val hyperdriveRating: Float,
-    val MGLT: Int,
+    val hyperdriveRating: String,
+    val MGLT: String,
     @SerializedName("starship_class")
     override val `class`: String,
 

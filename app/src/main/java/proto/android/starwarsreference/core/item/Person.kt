@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Person(
     override val name: CharSequence,
-    val height: Int,
-    val mass: Int,
+    val height: String,
+    val mass: String,
     @SerializedName("hair_color")
     val hairColor: String,
     @SerializedName("skin_color")

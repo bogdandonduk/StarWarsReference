@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <style name="Theme.StarWarsReference" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:splitMotionEvents">false</item>
     </style>
